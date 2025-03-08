@@ -100,7 +100,7 @@ async function fetchMessages() {
         // Fetch each IPFS-stored chat log
         chatBox.innerHTML = "";
         for (const hash of ipfsHashes) {
-            const ipfsMessages = await fetch(`https://ipfs.io/ipfs/${hash}`).then(res => res.json());
+            const ipfsMessages = await fetch(`https://gateway.pinata.cloud/ipfs/${hash}`).then(res => res.json());
             ipfsMessages.forEach(msg => displayMessage(msg.sender, msg.message));
         }
     } catch (error) {
@@ -138,25 +138,31 @@ sendBtn.addEventListener("click", function () {
     }
 });
 
-// Upload chat logs to IPFS
+// Upload chat logs to IPFS via Pinata
 async function uploadToIPFS(messages) {
+    const PINATA_API_KEY = "YOUR_PINATA_API_KEY";
+    const PINATA_SECRET_API_KEY = "YOUR_PINATA_SECRET";
+
     try {
-        const response = await fetch("https://api.web3.storage/upload", {
+        const response = await fetch("https://api.pinata.cloud/pinning/pinJSONToIPFS", {
             method: "POST",
             headers: {
-                "Authorization": "Bearer YOUR_WEB3_STORAGE_API_KEY",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "pinata_api_key": PINATA_API_KEY,
+                "pinata_secret_api_key": PINATA_SECRET_API_KEY
             },
-            body: JSON.stringify(messages)
+            body: JSON.stringify({
+                pinataContent: messages
+            })
         });
 
         const result = await response.json();
-        const ipfsHash = result.cid; // The IPFS hash of the stored chat log
+        const ipfsHash = result.IpfsHash; // Get IPFS Hash
 
-        // Store IPFS hash on Hive
+        // Store the IPFS hash on Hive
         storeIpfsHashOnHive(ipfsHash);
     } catch (error) {
-        console.error("Error uploading to IPFS:", error);
+        console.error("Error uploading to IPFS via Pinata:", error);
     }
 }
 
