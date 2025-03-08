@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Flare</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Create a Flare</h1>
+        <form id="flareForm">
+            <label>Flare Name:</label>
+            <input type="text" id="flareName" placeholder="Enter flare name" required>
+
+            <label>Max Participants:</label>
+            <input type="number" id="maxParticipants" min="2" max="10" required>
+
+            <button type="submit" class="btn">Shoot Flare</button>
+        </form>
+    </div>
+
+    <script src="hive-auth.js"></script>
+    <script src="flare-create.js"></script> <!-- Flare creation logic -->
+</body>
+</html>
