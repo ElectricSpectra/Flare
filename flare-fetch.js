@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 body: JSON.stringify({
                     jsonrpc: "2.0",
                     method: "condenser_api.get_account_history",
-                    params: ["flarechain", -1, 100], // Use the correct Hive account
+                    params: ["flarechain", -1, 100], // Use correct Hive account tracking flares
                     id: 1
                 }),
                 headers: { "Content-Type": "application/json" }
@@ -39,6 +39,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 return !closedFlares.includes(flare.flare_id) && diffMinutes <= 10;
             });
 
+            // Sort Flares by creation time (Newest first)
+            flares.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
             // Clear old content
             flareList.innerHTML = "";
 
@@ -57,8 +60,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 flareList.appendChild(listItem);
             });
         } catch (error) {
-            console.error("Error fetching flares:", error);
-            flareList.innerHTML = "<p>Failed to load flares.</p>";
+            console.error("❌ Error fetching flares:", error);
+            flareList.innerHTML = "<p>⚠️ Failed to load flares. Please try again later.</p>";
         }
     }
 
@@ -66,4 +69,3 @@ document.addEventListener("DOMContentLoaded", function () {
     setInterval(fetchFlares, 30000);
     fetchFlares();
 });
- 
